@@ -24,9 +24,9 @@ class Card extends Component {
 
                 </div>
                 <div draggable="true" onDrag={this.onDrag} className={card ? 'body ' + card.color : 'body' }>
-                    <div className="card-rank">{card ? card.name: null}</div>
-                    <div className={suitClass}></div>
-                    <div className="card-rank-bottom">{card ? card.name: null}</div>
+                    <div  onDrag={this.onDrag} className="card-rank">{card ? card.name: null}</div>
+                    <div  onDrag={this.onDrag} className={suitClass}></div>
+                    <div  onDrag={this.onDrag} className="card-rank-bottom">{card ? card.name: null}</div>
                 </div>
                 <AceArea/>
             </div>

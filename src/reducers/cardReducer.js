@@ -83,12 +83,13 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
                 fromDeck: true
             };
             let changedDeck = state.myCards.slice(0, state.myCards.length);
-            selectCard(changedDeck[action.index])
+            selectCard(changedDeck[action.index]);
             return {...state, myCards: changedDeck,containerDeck: moveDeckStore};
         case 'MOVE-STACK-TO':
             deselect(state.containerDeck.card);
             let newStack = state.dealtCards.slice(0, state.dealtCards.length);
             let storeDeck = state.myCards.slice(0, state.myCards.length);
+            let stateIndex = state.index;
             if(newStack[action.arrayIndex].length !== 0){
                 let numbersDifference = state.containerDeck.card[0].rank - newStack[action.arrayIndex][newStack[action.arrayIndex].length - 1].rank;
                 let movingColor = state.containerDeck.card[0].color;
@@ -103,13 +104,14 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
                 newStack[action.arrayIndex].push(state.containerDeck.card[i])}
             if(state.containerDeck.fromDeck){
                 storeDeck[state.containerDeck.arrayIndex].flipped = true;
-                storeDeck.splice(state.containerDeck.arrayIndex,1)}
+                storeDeck.splice(state.containerDeck.arrayIndex,1);
+                if(stateIndex !==0){stateIndex = stateIndex -1}}
             else {
                 let NumberOfcardsToRemove = newStack[state.containerDeck.arrayIndex].length - state.containerDeck.cardIndex +1;
                 newStack[state.containerDeck.arrayIndex].splice(state.containerDeck.cardIndex, NumberOfcardsToRemove);
             }
             flipCards(newStack);
-            return {...state, myCards: storeDeck, dealtCards: newStack, containerDeck: null};
+            return {...state, index: stateIndex, myCards: storeDeck, dealtCards: newStack, containerDeck: null};
         case 'MOVE-CARD-TO-ACE':
             state.containerDeck.card[0].selected = false;
             let newAceArea = state.aceArea.slice(0,state.aceArea.length);
