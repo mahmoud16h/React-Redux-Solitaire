@@ -6,10 +6,10 @@
   "scripts": {
     "test": "mocha --recursive --require babel-polyfill --require ignore-styles --compilers js:babel-register",
     "test-and-watch": "mocha --recursive --watch --require babel-polyfill --require ignore-styles --compilers js:babel-register",
-    "build": "webpack",
+    "poststall": "webpack",
     "dev": "webpack-dev-server --content-base build/ --port 3001",
     "serve": "serve ./build",
-    "start": "babel-node --presets es2015 server.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
