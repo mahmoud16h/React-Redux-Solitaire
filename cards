@@ -1,0 +1,40 @@
+function makeDeck () {
+    let createDeck = () => {
+        let cardArr = [];
+        const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        const values = ['two', 'three', 'four', 'five', 'six', 'seven',
+            'eight', 'nine', 'ten', 'jack', 'queen', 'king', 'ace'];
+
+        suits.forEach((suit) => {
+            values.forEach((rank) => {
+                let str = rank + ' of ' + suit;
+                cardArr.push({name: str, flipped: true});
+            });
+        });
+
+        return cardArr;
+    };
+    let deck = createDeck();
+    console.log(deck);
+    return deck;
+}
+
+const cardReducer = (state = makeDeck(), action) => {
+    switch (action.type) {
+        case 'SHUFFLE-DECK':
+            let newDeck = makeDeck();
+            shuffle(newDeck);
+            return newDeck;
+        default:
+            return state
+    }
+}
+
+export default cardReducer;
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+}
