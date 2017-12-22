@@ -87,9 +87,11 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
             return {...state, myCards: changedDeck,containerDeck: moveDeckStore};
         case 'MOVE-STACK-TO':
             deselect(state.containerDeck.card);
+            console.log('deselected cards')
             let newStack = state.dealtCards.slice(0, state.dealtCards.length);
             let storeDeck = state.myCards.slice(0, state.myCards.length);
             let stateIndex = state.index;
+            console.log('king check loop')
             if(newStack[action.arrayIndex].length !== 0){
                 let numbersDifference = state.containerDeck.card[0].rank - newStack[action.arrayIndex][newStack[action.arrayIndex].length - 1].rank;
                 let movingColor = state.containerDeck.card[0].color;
@@ -100,6 +102,7 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
                     return {...state, myCards: storeDeck, containerDeck: null}
                 }
             }
+            console.log('pushing new cards into new index')
             for(let i=0 ; i < state.containerDeck.card.length; i++){
                 newStack[action.arrayIndex].push(state.containerDeck.card[i])}
             if(state.containerDeck.fromDeck){
@@ -107,13 +110,16 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
                 storeDeck.splice(state.containerDeck.arrayIndex,1);
                 if(stateIndex !==0){stateIndex = stateIndex -1}}
             else {
+                console.log('removing cards')
                 let NumberOfcardsToRemove = newStack[state.containerDeck.arrayIndex].length - state.containerDeck.cardIndex +1;
                 newStack[state.containerDeck.arrayIndex].splice(state.containerDeck.cardIndex, NumberOfcardsToRemove);
             }
+            console.log('flipping cards')
             flipCards(newStack);
             return {...state, index: stateIndex, myCards: storeDeck, dealtCards: newStack, containerDeck: null};
         case 'MOVE-CARD-TO-ACE':
             state.containerDeck.card[0].selected = false;
+            let newStateIndex = state.index ;
             let newAceArea = state.aceArea.slice(0,state.aceArea.length);
             let newLowerCards = state.dealtCards.slice(0, state.dealtCards.length);
             let newUpperDeck = state.myCards.slice(0, state.myCards.length);
@@ -123,10 +129,11 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
             if(movingSuit !== landingSuit || movingDifference!== 1 )
             {return {...state, containerDeck: null}}else{
                 newAceArea[action.arrayIndex].push(state.containerDeck.card[0]);
-                if(state.containerDeck.fromDeck){newUpperDeck.splice(state.containerDeck.arrayIndex,1)}
+                if(state.containerDeck.fromDeck){newUpperDeck.splice(state.containerDeck.arrayIndex,1)
+                    if(newStateIndex !==0){newStateIndex = newStateIndex -1}}
                 else{newLowerCards[state.containerDeck.arrayIndex].pop();
                     flipCards(newLowerCards)}
-                return {...state, myCards: newUpperDeck, dealtCards: newLowerCards, aceArea: newAceArea, containerDeck: null}}
+                return {...state, index: newStateIndex ,myCards: newUpperDeck, dealtCards: newLowerCards, aceArea: newAceArea, containerDeck: null}}
         case 'DEAL-DECK':
             console.log('deal deck');
             let dealingCards = makeDeck();

@@ -9,14 +9,13 @@ class Card extends Component {
 
     onDrag = () => {
         this.props.moveDeckCard(this.props.cards[this.props.index], this.props.index)
-    }
+    };
 
 
     render() {
 
 
         let card = this.props.cards[this.props.index];
-        let suitClass = "card-suit " + card.suit;
 
         return(
             <div className="deck-container">
@@ -25,7 +24,7 @@ class Card extends Component {
                 </div>
                 <div draggable="true" onDrag={this.onDrag} className={card ? 'body ' + card.color : 'body' }>
                     <div  onDrag={this.onDrag} className="card-rank">{card ? card.name: null}</div>
-                    <div  onDrag={this.onDrag} className={suitClass}></div>
+                    <div  onDrag={this.onDrag} className={card ? "card-suit " + card.suit : null}></div>
                     <div  onDrag={this.onDrag} className="card-rank-bottom">{card ? card.name: null}</div>
                 </div>
                 <AceArea/>
