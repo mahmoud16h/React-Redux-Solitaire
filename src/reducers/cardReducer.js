@@ -75,7 +75,6 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
             }
             return {...state, containerDeck: moveStore, dealtCards: cardsChange};
         case 'MOVE-DECK-CARD':
-            // add styling so that the one card that's going to be moved is now a different color to the others
             let cards = [action.toMove];
             let moveDeckStore  = {
                 card: cards,
@@ -87,11 +86,10 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
             return {...state, myCards: changedDeck,containerDeck: moveDeckStore};
         case 'MOVE-STACK-TO':
             deselect(state.containerDeck.card);
-            console.log('deselected cards')
             let newStack = state.dealtCards.slice(0, state.dealtCards.length);
             let storeDeck = state.myCards.slice(0, state.myCards.length);
             let stateIndex = state.index;
-            console.log('king check loop')
+            //Checking to see if card being moved in King
             if(newStack[action.arrayIndex].length !== 0){
                 let numbersDifference = state.containerDeck.card[0].rank - newStack[action.arrayIndex][newStack[action.arrayIndex].length - 1].rank;
                 let movingColor = state.containerDeck.card[0].color;
@@ -102,7 +100,7 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
                     return {...state, myCards: storeDeck, containerDeck: null}
                 }
             }
-            console.log('pushing new cards into new index')
+            //Pushing new cards into new array index that they are being moved to
             for(let i=0 ; i < state.containerDeck.card.length; i++){
                 newStack[action.arrayIndex].push(state.containerDeck.card[i])}
             if(state.containerDeck.fromDeck){
@@ -110,11 +108,11 @@ const cardReducer = (state =  { index: 0 ,myCards : makeDeck(), containerDeck: n
                 storeDeck.splice(state.containerDeck.arrayIndex,1);
                 if(stateIndex !==0){stateIndex = stateIndex -1}}
             else {
-                console.log('removing cards')
+                //removing cards from the existig array index
                 let NumberOfcardsToRemove = newStack[state.containerDeck.arrayIndex].length - state.containerDeck.cardIndex +1;
                 newStack[state.containerDeck.arrayIndex].splice(state.containerDeck.cardIndex, NumberOfcardsToRemove);
             }
-            console.log('flipping cards')
+            //flipping cards that should be flipped
             flipCards(newStack);
             return {...state, index: stateIndex, myCards: storeDeck, dealtCards: newStack, containerDeck: null};
         case 'MOVE-CARD-TO-ACE':

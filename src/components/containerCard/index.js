@@ -62,7 +62,7 @@ const mapStateToProps = (state) =>{
     return{
         containerDeck : state.cards.containerDeck
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) =>{
     return {
@@ -70,7 +70,7 @@ const mapDispatchToProps = (dispatch) =>{
         moveStackTo: (array, card, arrayIndex) => dispatch (moveStackTo(array, card, arrayIndex)),
         moveThirteen: (arrayIndex) => dispatch (moveStackTo(null, null, arrayIndex))
     }
-}
+};
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContainerCard);

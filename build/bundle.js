@@ -11625,7 +11625,6 @@ var Card = function (_Component) {
             var _this2 = this;
 
             var card = this.props.cards[this.props.index];
-            var suitClass = "card-suit " + card.suit;
 
             return _react2.default.createElement(
                 'div',
@@ -11638,13 +11637,13 @@ var Card = function (_Component) {
                     { draggable: 'true', onDrag: this.onDrag, className: card ? 'body ' + card.color : 'body' },
                     _react2.default.createElement(
                         'div',
-                        { className: 'card-rank' },
+                        { onDrag: this.onDrag, className: 'card-rank' },
                         card ? card.name : null
                     ),
-                    _react2.default.createElement('div', { className: suitClass }),
+                    _react2.default.createElement('div', { onDrag: this.onDrag, className: card ? "card-suit " + card.suit : null }),
                     _react2.default.createElement(
                         'div',
-                        { className: 'card-rank-bottom' },
+                        { onDrag: this.onDrag, className: 'card-rank-bottom' },
                         card ? card.name : null
                     )
                 ),
@@ -12048,7 +12047,6 @@ var cardReducer = function cardReducer() {
             }
             return _extends({}, state, { containerDeck: moveStore, dealtCards: cardsChange });
         case 'MOVE-DECK-CARD':
-            // add styling so that the one card that's going to be moved is now a different color to the others
             var cards = [action.toMove];
             var moveDeckStore = {
                 card: cards,
@@ -12062,6 +12060,8 @@ var cardReducer = function cardReducer() {
             deselect(state.containerDeck.card);
             var newStack = state.dealtCards.slice(0, state.dealtCards.length);
             var storeDeck = state.myCards.slice(0, state.myCards.length);
+            var stateIndex = state.index;
+            //Checking to see if card being moved in King
             if (newStack[action.arrayIndex].length !== 0) {
                 var numbersDifference = state.containerDeck.card[0].rank - newStack[action.arrayIndex][newStack[action.arrayIndex].length - 1].rank;
                 var movingColor = state.containerDeck.card[0].color;
@@ -12072,20 +12072,27 @@ var cardReducer = function cardReducer() {
                     return _extends({}, state, { myCards: storeDeck, containerDeck: null });
                 }
             }
+            //Pushing new cards into new array index that they are being moved to
             for (var _i = 0; _i < state.containerDeck.card.length; _i++) {
                 newStack[action.arrayIndex].push(state.containerDeck.card[_i]);
             }
             if (state.containerDeck.fromDeck) {
                 storeDeck[state.containerDeck.arrayIndex].flipped = true;
                 storeDeck.splice(state.containerDeck.arrayIndex, 1);
+                if (stateIndex !== 0) {
+                    stateIndex = stateIndex - 1;
+                }
             } else {
+                //removing cards from the existig array index
                 var NumberOfcardsToRemove = newStack[state.containerDeck.arrayIndex].length - state.containerDeck.cardIndex + 1;
                 newStack[state.containerDeck.arrayIndex].splice(state.containerDeck.cardIndex, NumberOfcardsToRemove);
             }
+            //flipping cards that should be flipped
             flipCards(newStack);
-            return _extends({}, state, { myCards: storeDeck, dealtCards: newStack, containerDeck: null });
+            return _extends({}, state, { index: stateIndex, myCards: storeDeck, dealtCards: newStack, containerDeck: null });
         case 'MOVE-CARD-TO-ACE':
             state.containerDeck.card[0].selected = false;
+            var newStateIndex = state.index;
             var newAceArea = state.aceArea.slice(0, state.aceArea.length);
             var newLowerCards = state.dealtCards.slice(0, state.dealtCards.length);
             var newUpperDeck = state.myCards.slice(0, state.myCards.length);
@@ -12098,11 +12105,14 @@ var cardReducer = function cardReducer() {
                 newAceArea[action.arrayIndex].push(state.containerDeck.card[0]);
                 if (state.containerDeck.fromDeck) {
                     newUpperDeck.splice(state.containerDeck.arrayIndex, 1);
+                    if (newStateIndex !== 0) {
+                        newStateIndex = newStateIndex - 1;
+                    }
                 } else {
                     newLowerCards[state.containerDeck.arrayIndex].pop();
                     flipCards(newLowerCards);
                 }
-                return _extends({}, state, { myCards: newUpperDeck, dealtCards: newLowerCards, aceArea: newAceArea, containerDeck: null });
+                return _extends({}, state, { index: newStateIndex, myCards: newUpperDeck, dealtCards: newLowerCards, aceArea: newAceArea, containerDeck: null });
             }
         case 'DEAL-DECK':
             console.log('deal deck');
