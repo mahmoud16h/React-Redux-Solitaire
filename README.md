@@ -20,4 +20,3 @@ https://pacific-ridge-20860.herokuapp.com/
 Once on the page, hit 'Start Game' and let's see you complete those cards.
 
 # React-Redux-Solitaire
-# React-Redux-Solitaire
